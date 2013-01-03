@@ -9,8 +9,10 @@ ART = 'art-default.jpg'
 ICON = 'icon-default.png'
 ICON_SEARCH = 'icon-search.png'
 
-RE_THUMB = Regex('UR(?P<x>[0-9]+),(?P<y>[0-9]+)_')
-THUMB_PATTERN = 'packshot._UR%s,%s'
+RE_TV_EPISODES = [
+    Regex("^(?P<show>[^-]*) - S(?P<season_index>\d+) E(?P<episode_index>\d+) - (?P<episode_name>.*)$"),
+    Regex("^(?P<show>[^-]*) - S(?P<season_index>\d+) E(?P<episode_index>\d+)$")
+]
 
 ####################################################################################################
 def Start():
@@ -168,10 +170,50 @@ def BrowseSeason(title, season_url):
 
     page = HTML.ElementFromURL(season_url)
 
+    thumb = page.xpath('//div[@class = "heroshot"]/img')[0].get('src')
 
-    #for episode in page.xpath("//div[@class = 'list_episodes']"):
+    for episode in page.xpath("//div[@class = 'list_episodes']//li"):
+        
+        index = int(episode.xpath(".//span[@class = 'episode_index']/text()")[0])
+        
+        episode_link = None
+        try: episode_link = episode.xpath(".//a[@class = 'episode_link']")[0]
+        except: episode_link = episode.xpath(".//span[@class = 'episode_link']")[0]
 
+        url = episode_link.get('href')
+        if url == None:
+            url = season_url
 
+        full_title = episode_link.text
+
+        show = None
+        season_index = None
+        episode_index = None
+        episode_name = None
+
+        for pattern in RE_TV_EPISODES:
+            match = pattern.match(full_title)
+            if match != None:
+                match_dict = match.groupdict()
+                if match_dict.has_key('show'):
+                    show = match_dict['show']
+                if match_dict.has_key('season_index'):
+                    season_index = int(match_dict['season_index'])
+                if match_dict.has_key('episode_index'):
+                    episode_index = int(match_dict['episode_index'])
+                if match_dict.has_key('episode_name'):
+                    episode_name = match_dict['episode_name']
+
+        if show == None:
+            episode_name = full_title
+
+        oc.add(EpisodeObject(
+            url = url,
+            title = episode_name,
+            show = show,
+            season = season_index,
+            index = episode_index,
+            thumb = Resource.ContentsOfURLWithFallback(GetThumbList(thumb), fallback = ICON)))
 
     return oc
 
