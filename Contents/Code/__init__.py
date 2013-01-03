@@ -102,17 +102,11 @@ def BrowseURL(title, url):
 
             season_details = details["title"].split('-')
             show = season_details[0].strip()
-            
-            season = None
-            try: season = int(re.search('([0-9]+)', season_details[1]).groups()[0])
-            except: pass
 
-            oc.add(SeasonObject(
-                key = Callback(BrowseSeason, title = details["title"], season_url = details["url"]),
+            oc.add(TVShowObject(
+                key = Callback(BrowseShow, title = details["title"], show_url = details["url"]),
                 rating_key = details["url"],
-                show = show,
-                index = season,
-                title = details["title"],
+                title = show,
                 thumb = Resource.ContentsOfURLWithFallback(GetThumbList(details['thumb']), fallback = ICON)))
 
     pagination = page.xpath("//div[contains(@class, 'pagination')]")
@@ -127,7 +121,48 @@ def BrowseURL(title, url):
 
 ####################################################################################################
 
-@route("/video/lovefilm-player/tv/")
+@route("/video/lovefilm-player/tv")
+def BrowseShow(title, show_url):
+    oc = ObjectContainer(title2 = title)
+
+    page = HTML.ElementFromURL(show_url)
+    
+    show = page.xpath("//meta[@property = 'og:title']")[0].get('content').split('-')[0].strip()
+    thumb = page.xpath("//meta[@property = 'og:image']")[0].get('content')
+    thumbs = [thumb.replace('medium', 'large'), thumb]
+
+    for season in page.xpath("//div[contains(@class, 'season')]/div[@class = 'left_col']//li/a"):
+
+        season_url = season.get('href')
+        if season_url.startswith('/'):
+            season_url = show_url.split('/tv')[0] + season_url
+
+        title = season.xpath(".//span[@class = 'n_season']/text()")[0]
+
+        index = None
+        try: index = int(re.search('([0-9]+)', title).groups()[0])
+        except: pass
+
+        episode_count = None
+        try: episode_count = int(re.search('([0-9]+)', season.xpath('.//span[@class = "n_episodes"]/text()')[0]).groups()[0])
+        except: Log.Exception("BOOM")
+
+        oc.add(SeasonObject(
+            key = Callback(BrowseSeason, title = title, season_url = season_url),
+            rating_key = season_url,
+            show = show,
+            title = title,
+            index = index,
+            episode_count = episode_count,
+            thumb = Resource.ContentsOfURLWithFallback(thumbs, fallback = ICON)))
+
+    if len(oc) != 1:
+        return oc
+    return BrowseSeason(title = title, season_url = show_url)
+
+####################################################################################################
+
+@route("/video/lovefilm-player/tv/season")
 def BrowseSeason(title, season_url):
     oc = ObjectContainer(title2 = title)
 
