@@ -109,7 +109,7 @@ def BrowseURL(title, url):
                 show = show,
                 index = season,
                 title = details["title"],
-                thumb = details["thumb"]))
+                thumb = Resource.ContentsOfURLWithFallback(GetThumbList(details['thumb']), fallback = ICON)))
 
     pagination = page.xpath("//div[contains(@class, 'pagination')]")
     if len(pagination) > 0:
@@ -166,12 +166,15 @@ def GetThumbList(original_url):
     thumbs = [original_url]
 
     try:
-        match = RE_THUMB.search(original_url).groupdict()
-        new_url = original_url.replace(THUMB_PATTERN % (match['x'], match['y']), THUMB_PATTERN % (match['x'] + '0', match['y'] + '0'))
-        thumbs = [new_url] + thumbs
-    except: pass
+        new_url = None
+        for splitter in ['packshot', 'fourthree']:
+            separate = original_url.split(splitter)
+            if len(separate) == 2:
+                new_url = separate[0] + splitter + '.jpg'
+                break
 
-    Log("IABI")
-    Log(thumbs)
+        if new_url != None:
+            thumbs = [new_url] + thumbs
+    except: pass
 
     return thumbs
