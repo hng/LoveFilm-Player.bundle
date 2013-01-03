@@ -23,7 +23,13 @@ class Catalog(object):
         token = token + String.Quote("?unique=%s&mature=%s&type=%s&%s&adult=%s&m=GET" % (self.unique, self.mature, type, formats, self.adult))
         token = String.Quote(token)
         token = String.Quote(token)
-        return "http://www.lovefilm.com/browse/?token=%s&v=l&r=25" % token
+
+        # Determine which site to use based upon the current preferences.
+        site_url = "http://www.lovefilm.com/browse/?token=%s&v=l&r=25"
+        if Prefs['site'] == "DE":
+            site_url = "http://www.lovefilm.de/browse/?token=%s&v=l&r=25"
+
+        return site_url % token
 
 hot_lists = {
   "newreleases":  Catalog("New Releases", ["hotlist|new_releases"]),

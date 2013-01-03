@@ -47,7 +47,8 @@ def MainMenu():
             key = Callback(BrowseHotlist, id = hotlist_item_id),
             title = hotlist_item.title))
 
-    oc.add(DirectoryObject(key = Callback(BrowseGenres, title = "Genres"), title = "Genres"))
+    if Prefs['site'] == "UK":
+        oc.add(DirectoryObject(key = Callback(BrowseGenres, title = "Genres"), title = "Genres"))
 
     # Preferences
     oc.add(PrefsObject(title = L('Preferences')))
@@ -101,7 +102,10 @@ def BrowseURL(title, url):
 
             season_details = details["title"].split('-')
             show = season_details[0].strip()
-            season = int(season_details[1].replace('Series', '').strip())
+            
+            season = None
+            try: season = int(re.search('([0-9]+)', season_details[1]).groups()[0])
+            except: pass
 
             oc.add(SeasonObject(
                 key = Callback(BrowseSeason, title = details["title"], season_url = details["url"]),
