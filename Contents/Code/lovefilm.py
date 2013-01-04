@@ -39,7 +39,7 @@ hot_lists = {
 
 ordered_hot_lists = ["newreleases", "justadded", "mostwatched"]
 
-genre_lists = {
+uk_genre_lists = {
     "actionadventure":  Catalog("Action/Adventure", ["genre|6095"]),
     "animated":         Catalog("Animated", ["genre|7234"]),
     "anime":            Catalog("Anime", ["genre|7338"]),
@@ -63,6 +63,43 @@ genre_lists = {
     "adult":            Catalog("Adult", ["genre|6096"])
 }
 
-ordered_genre_list = ["actionadventure", "animated", "anime", "bollywood", "comedy", "documentary", "drama",
-                      "family", "gay", "horror", "music", "romance", "scifi", "special", "sport", "teen",
-                      "television", "thriller", "world", "adult"]
+uk_ordered_genre_list = ["actionadventure", "animated", "anime", "bollywood", "comedy", "documentary", "drama",
+                         "family", "gay", "horror", "music", "romance", "scifi", "special", "sport", "teen",
+                         "television", "thriller", "world", "adult"]
+
+de_genre_lists = {
+    "actionadventure":  Catalog("Action/Abenteuer", ["genre|1179"]),
+    "bollywood":        Catalog("Bollywood", ["genre|1184"]),
+    "dokumentation":    Catalog("Dokumentation", ["genre|1168"]),
+    "drama":            Catalog("Drama", ["genre|1169"]),
+    "fernsehen":        Catalog("Fernsehen", ["genre|1209"]),
+    "historienfilm":    Catalog("Historienfilm", ["genre|2016"]),
+    "horror":           Catalog("Horror", ["genre|1187"]),
+    "kinderfilm":       Catalog("Kinderfilm", ["genre|1188"]),
+    "komodie":          Catalog("Komodie", ["genre|1163"]),
+    "kriegsfilm":       Catalog("Kriegsfilm", ["genre|1177"]),
+    "kriminalfilm":     Catalog("Kriminalfilm", ["genre|1191"]),
+    "liebesfilm":       Catalog("Liebesfilm", ["genre|1286"]),
+    "musik":            Catalog("Musik", ["genre|1289"]),
+    "ratgeber":         Catalog("Ratgeber und Bildung", ["genre|1295"]),
+    "scifi":            Catalog("Science Fiction/Fantasy", ["genre|1297"]),
+    "sport":            Catalog("Sport", ["genre|1178"]),
+    "thriller":         Catalog("Thriller", ["genre|1160"]),
+    "unterhaltung":     Catalog("Unterhaltung", ["genre|1213"]),
+    "western":          Catalog("Western", ["genre|1214"]),
+    "zeichentrick":     Catalog("Zeichentrick", ["genre|1216"])
+}
+
+de_ordered_genre_list = ["actionadventure", "bollywood", "dokumentation", "drama", "fernsehen", "historienfilm",
+                         "horror", "kinderfilm", "komodie", "kriegsfilm", "kriminalfilm", "liebesfilm", "musik",
+                         "ratgeber", "scifi", "sport", "thriller", "unterhaltung", "western", "zeichentrick"]
+
+genre_list = {
+    "UK": uk_genre_lists, 
+    "DE": de_genre_lists
+}
+
+ordered_genre_list = {
+    "UK": uk_ordered_genre_list,
+    "DE": de_ordered_genre_list
+}

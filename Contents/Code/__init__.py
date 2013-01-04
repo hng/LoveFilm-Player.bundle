@@ -49,8 +49,7 @@ def MainMenu():
             key = Callback(BrowseHotlist, id = hotlist_item_id),
             title = hotlist_item.title))
 
-    if Prefs['site'] == "UK":
-        oc.add(DirectoryObject(key = Callback(BrowseGenres, title = "Genres"), title = "Genres"))
+    oc.add(DirectoryObject(key = Callback(BrowseGenres, title = "Genres"), title = "Genres"))
 
     # Preferences
     oc.add(PrefsObject(title = L('Preferences')))
@@ -70,8 +69,10 @@ def BrowseHotlist(id):
 def BrowseGenres(title):
     oc = ObjectContainer(title2 = title)
 
-    for genre_item_id in lovefilm.ordered_genre_list:
-        genre_item = lovefilm.genre_lists[genre_item_id]
+    genre_lists = lovefilm.genre_list[Prefs["site"]]
+    ordered_genre_list = lovefilm.ordered_genre_list[Prefs["site"]]
+    for genre_item_id in ordered_genre_list:
+        genre_item = genre_lists[genre_item_id]
         oc.add(DirectoryObject(
             key = Callback(BrowseURL, title = genre_item.title, url = genre_item.browse_url()),
             title = genre_item.title))
