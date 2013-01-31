@@ -1,4 +1,3 @@
-import re
 import lovefilm
 
 VIDEO_PREFIX = "/video/lovefilm-player"
@@ -7,13 +6,12 @@ NAME = "LoveFilm Player"
 
 ART = 'art-default.jpg'
 ICON = 'icon-default.png'
-ICON_SEARCH = 'icon-search.png'
 
 RE_TV_EPISODES = [
     Regex("^(?P<show>[^-]*) - S(?P<season_index>\d+) E(?P<episode_index>\d+) - (?P<episode_name>.*)$"),
     Regex("^(?P<show>[^-]*) - S(?P<season_index>\d+) E(?P<episode_index>\d+)$")
 ]
-
+RE_EP_COUNT = Regex('([0-9]+)')
 ####################################################################################################
 def Start():
     
@@ -52,8 +50,8 @@ def MainMenu():
     oc.add(DirectoryObject(key = Callback(BrowseGenres, title = "Genres"), title = "Genres"))
 
     # Preferences
-    oc.add(PrefsObject(title = L('Preferences')))
-    
+    oc.add(PrefsObject(title = L('Preferences'), thumb=R('icon-prefs.png')))
+
     return oc
 
 ####################################################################################################
@@ -143,11 +141,11 @@ def BrowseShow(title, show_url):
         title = season.xpath(".//span[@class = 'n_season']/text()")[0]
 
         index = None
-        try: index = int(re.search('([0-9]+)', title).groups()[0])
+        try: index = int(RE_EP_COUNT.search(title).groups()[0])
         except: pass
 
         episode_count = None
-        try: episode_count = int(re.search('([0-9]+)', season.xpath('.//span[@class = "n_episodes"]/text()')[0]).groups()[0])
+        try: episode_count = int(RE_EP_COUNT.search(season.xpath('.//span[@class = "n_episodes"]/text()')[0]).groups()[0])
         except: Log.Exception("BOOM")
 
         oc.add(SeasonObject(
