@@ -19,6 +19,7 @@
 	<string>2</string>
 	<key>PlexPluginRegions</key>
 	<array>
+		<string>DE</string>
 		<string>GB</string>
 	</array>
 </dict>
