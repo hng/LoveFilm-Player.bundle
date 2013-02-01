@@ -3,15 +3,15 @@
 	agent="Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12"
 	plugin="silverlight"
 	initialState="wait-for-frame-load"
-	version="2.0"
+	version="3.0"
 	identifier="com.plexapp.plugins.lovefilm-player"
 	manualLock="true">
 
 	<!-- The condition we use several times from within states to check if we're logged in or not -->
 	<condition name="need-to-login">
 		<and>
-			<!-- Returns 0 if we need to login -->
-			<javascript script="$('.rentlist-length').length" matches="0" />
+			<!-- Returns 1 if we need to login -->
+			<javascript script="(function(){x=false;jQuery.ajax({url:'https://www.lovefilm.com/apps/catalog/ajax/player/player_logs.html',success:function(r){if(r.indexOf('No customer logged in')==0){x=true;}},async:false});return x;})() ? 1 : 0" matches="1" />
 		</and>
 	</condition>
 
@@ -24,6 +24,7 @@
 			</condition>
 			<action>
 				<!-- ...then goto the 'check-for-auth' state -->
+				<pause time="5000" />
 				<goto state="check-for-auth" />
 			</action>
 		</event>
@@ -48,7 +49,7 @@
 				<condition name="need-to-login" />
 			</condition>
 			<action>
-				<run script="var url='https://www.lovefilm.com/visitor/login_lf.html';var data={email:'${username}',password:'${password}',logincmd:'login',continue:'Sign in with LOVEFiLM'};jQuery.post(url,data,function(data){location.reload(true);});" />
+				<run script="(function(){jQuery.ajax({type:'POST',url:'https://www.lovefilm.com/visitor/login_lf.html',data:{email:'${username}',password:'${password}',logincmd:'login'},success:function(){location.reload()},async:false})})()" />
 				<pause time="5000" />
 				<goto state="check-for-auth-again" />
 			</action>
