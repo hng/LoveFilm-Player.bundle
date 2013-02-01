@@ -138,11 +138,11 @@ def BrowseShow(title, show_url):
         title = season.xpath(".//span[@class = 'n_season']/text()")[0]
 
         index = None
-        try: index = int(RE_EP_COUNT.search(title).groups()[0])
+        try: index = int(RE_EP_COUNT.search(title).group(1))
         except: pass
 
         episode_count = None
-        try: episode_count = int(RE_EP_COUNT.search(season.xpath('.//span[@class = "n_episodes"]/text()')[0]).groups()[0])
+        try: episode_count = int(RE_EP_COUNT.search(season.xpath('.//span[@class = "n_episodes"]/text()')[0]).group(1))
         except: Log.Exception("BOOM")
 
         oc.add(SeasonObject(
