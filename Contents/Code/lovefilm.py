@@ -1,4 +1,3 @@
-
 class Catalog(object):
     def __init__(self, title, formats):
         self.title = title

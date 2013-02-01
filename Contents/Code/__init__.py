@@ -1,26 +1,21 @@
-import re
 import lovefilm
 
-VIDEO_PREFIX = "/video/lovefilm-player"
-
 NAME = "LoveFilm Player"
-
 ART = 'art-default.jpg'
 ICON = 'icon-default.png'
-ICON_SEARCH = 'icon-search.png'
 
 RE_TV_EPISODES = [
     Regex("^(?P<show>[^-]*) - S(?P<season_index>\d+) E(?P<episode_index>\d+) - (?P<episode_name>.*)$"),
     Regex("^(?P<show>[^-]*) - S(?P<season_index>\d+) E(?P<episode_index>\d+)$")
 ]
+RE_EP_COUNT = Regex('([0-9]+)')
 
 ####################################################################################################
 def Start():
-    
+
     # Initialize the plugin
-    Plugin.AddPrefixHandler(VIDEO_PREFIX, MainMenu, NAME, ICON, ART)
     Plugin.AddViewGroup("InfoList", viewMode = "InfoList", mediaType = "items")
-    
+
     # Setup the artwork associated with the plugin
     ObjectContainer.title1 = NAME
     ObjectContainer.art = R(ART)
@@ -39,8 +34,9 @@ def Start():
     HTTP.CacheTime = CACHE_1DAY
 
 ####################################################################################################
-
+@handler('/video/lovefilm-player', NAME, thumb=ICON, art=ART)
 def MainMenu():
+
     oc = ObjectContainer(no_cache = True)
 
     for hotlist_item_id in lovefilm.ordered_hot_lists:
@@ -52,27 +48,28 @@ def MainMenu():
     oc.add(DirectoryObject(key = Callback(BrowseGenres, title = "Genres"), title = "Genres"))
 
     # Preferences
-    oc.add(PrefsObject(title = L('Preferences')))
-    
+    oc.add(PrefsObject(title = L('Preferences'), thumb=R('icon-prefs.png')))
+
     return oc
 
 ####################################################################################################
-
 @route("/video/lovefilm-player/hotlist/{id}")
 def BrowseHotlist(id):
+
     hotlist_item = lovefilm.hot_lists[id]
     return BrowseURL(hotlist_item.title, hotlist_item.browse_url())
 
 ####################################################################################################
-
 @route("/video/lovefilm-player/genres")
 def BrowseGenres(title):
     oc = ObjectContainer(title2 = title)
 
     genre_lists = lovefilm.genre_list[Prefs["site"]]
     ordered_genre_list = lovefilm.ordered_genre_list[Prefs["site"]]
+
     for genre_item_id in ordered_genre_list:
         genre_item = genre_lists[genre_item_id]
+
         oc.add(DirectoryObject(
             key = Callback(BrowseURL, title = genre_item.title, url = genre_item.browse_url()),
             title = genre_item.title))
@@ -80,15 +77,15 @@ def BrowseGenres(title):
     return oc
 
 ####################################################################################################
-
 @route("/video/lovefilm-player/browse")
 def BrowseURL(title, url):
+
     oc = ObjectContainer(title2 = title)
-
     page = HTML.ElementFromURL(url)
-    for item in page.xpath("//div[@id = 'main-content']//div[contains(@class, 'film_listing')]"):
 
+    for item in page.xpath("//div[@id = 'main-content']//div[contains(@class, 'film_listing')]"):
         details = ParseItem(item)
+
         if details["type"] == "Film":
             oc.add(MovieObject(
                 url = details["url"],
@@ -123,13 +120,11 @@ def BrowseURL(title, url):
     return oc
 
 ####################################################################################################
-
 @route("/video/lovefilm-player/tv")
 def BrowseShow(title, show_url):
-    oc = ObjectContainer(title2 = title)
 
+    oc = ObjectContainer(title2 = title)
     page = HTML.ElementFromURL(show_url)
-    
     show = page.xpath("//meta[@property = 'og:title']")[0].get('content').split('-')[0].strip()
     thumb = page.xpath("//meta[@property = 'og:image']")[0].get('content')
     thumbs = [thumb.replace('medium', 'large'), thumb]
@@ -143,11 +138,11 @@ def BrowseShow(title, show_url):
         title = season.xpath(".//span[@class = 'n_season']/text()")[0]
 
         index = None
-        try: index = int(re.search('([0-9]+)', title).groups()[0])
+        try: index = int(RE_EP_COUNT.search(title).group(1))
         except: pass
 
         episode_count = None
-        try: episode_count = int(re.search('([0-9]+)', season.xpath('.//span[@class = "n_episodes"]/text()')[0]).groups()[0])
+        try: episode_count = int(RE_EP_COUNT.search(season.xpath('.//span[@class = "n_episodes"]/text()')[0]).group(1))
         except: Log.Exception("BOOM")
 
         oc.add(SeasonObject(
@@ -164,19 +159,16 @@ def BrowseShow(title, show_url):
     return BrowseSeason(title = title, season_url = show_url)
 
 ####################################################################################################
-
 @route("/video/lovefilm-player/tv/season")
 def BrowseSeason(title, season_url):
+
     oc = ObjectContainer(title2 = title)
-
     page = HTML.ElementFromURL(season_url)
-
     thumb = page.xpath('//div[@class = "heroshot"]/img')[0].get('src')
 
     for episode in page.xpath("//div[@class = 'list_episodes']//li"):
-        
         index = int(episode.xpath(".//span[@class = 'episode_index']/text()")[0])
-        
+
         episode_link = None
         try: episode_link = episode.xpath(".//a[@class = 'episode_link']")[0]
         except: episode_link = episode.xpath(".//span[@class = 'episode_link']")[0]
@@ -219,10 +211,9 @@ def BrowseSeason(title, season_url):
     return oc
 
 ####################################################################################################
-
 def ParseItem(item):
     details = {}
-    
+
     core_info = item.xpath(".//div[contains(@class, 'core_info')]")[0]
     details["type"] = core_info.get('data-product_type')
     details["title"] = core_info.get('data-product_name')
@@ -243,7 +234,6 @@ def ParseItem(item):
     return details
 
 ####################################################################################################
-
 def GetThumbList(original_url):
     thumbs = [original_url]
 
