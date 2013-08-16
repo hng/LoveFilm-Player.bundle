@@ -137,9 +137,7 @@ def BrowseShow(title, show_url):
     for season in page.xpath("//div[contains(@class, 'season')]/div[@class = 'left_col']//li"):
 
         season_url_xpath = season.xpath(".//a")
-        
-        Log.Debug(season.xpath(".//a"))
-        
+
         if len(season_url_xpath) != 0:
             season_url = season_url_xpath[0].get('href')
             if season_url.startswith('/'):
@@ -147,15 +145,11 @@ def BrowseShow(title, show_url):
         else:
             season_url = show_url
 
-        #season_title_xpath = season.xpath(".//span[@class = 'n_season']/text()")
-        #Log.Debug("class: " + season.get("class"))
         if season.get("class") == "selected":
             title = season.xpath("text()")[0].strip()
-            #title = season.xpath(".//span[@class = 'n_season']/text()")[0]
         else:
             title = season.xpath(".//span[@class = 'n_season']/text()")[0]
         
-        Log.Debug("title: " + title)
 
         index = None
         try: index = int(RE_EP_COUNT.search(title).group(1))
@@ -163,7 +157,6 @@ def BrowseShow(title, show_url):
 
         episode_count = None
         # episode_count not displayed :()
-        Log.Debug("LOVEFILM DEBUG: " + RE_EP_COUNT.search(season.xpath('.//span[@class = "n_episodes"]/text()')[0]).group(1))
         try: episode_count = int(RE_EP_COUNT.search(season.xpath('.//span[@class = "n_episodes"]/text()')[0]).group(1))
         except: Log.Exception("BOOM")
 
@@ -208,8 +201,6 @@ def BrowseSeason(title, season_url):
         episode_index = None
         episode_name = None
         
-        Log.Debug("FULL title: "+ full_title)
-        
         if Prefs['site'] == "DE":
             EPISODE_PATTERNS = RE_TV_EPISODES_DE
         else:
@@ -227,14 +218,10 @@ def BrowseSeason(title, season_url):
                     episode_index = int(match_dict['episode_index'])
                 if match_dict.has_key('episode_name'):
                     episode_name = match_dict['episode_name']
-            else:
-                Log.Debug("No Matches!!!!!")
 
         if show == None:
             episode_name = full_title
             
-        Log.Debug("TEST: " +url +", "+ episode_name+", "+ show+", "+ str(season_index)+", "+ str(episode_index));
-
         oc.add(EpisodeObject(
             url = url,
             title = episode_name,
