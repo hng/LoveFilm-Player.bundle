@@ -49,7 +49,7 @@
                 <condition name="need-to-login" />
             </condition>
             <action>
-                <run script="var url='https://www.lovefilm.de/ajax/member/login.html';var data={email:'${username}',password:'${password}', unique_id:'0', product_identifier:'0', faceted_release:'0'};jQuery.post(url,data,function(data){window.location.href=&quot;${url}&quot;});" />
+                <run script="var url='https://www.amazon.de/ap/signin';var data={email:'${username}',password:'${password}',appActionToken:'LZYf7F4G2DHC8tq1fvKREy6Tg9Qj3D',appAction:'SIGNIN', suppressSignInRadioButtons:'ape:MQ==',openid.pape.max_auth_age:'ape:MA==', rmrMeStringID:'ape:YXBfcmVtZW1lYmVyX21lX2RlZmF1bHRfbWVzc2FnZQ==',openid.ns:'ape:aHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjA=',openid.ns.pape:'ape:aHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvZXh0ZW5zaW9ucy9wYXBlLzEuMA==',pageId:'ape:bG92ZWZpbG0=',openid.identity:'ape:aHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjAvaWRlbnRpZmllcl9zZWxlY3Q=',clientContext:'ape:LUlLOTRUQzVnVTFteU5KSFp6ZnN3QT09',openid.claimed_id:'ape:aHR0cDovL3NwZWNzLm9wZW5pZC5uZXQvYXV0aC8yLjAvaWRlbnRpZmllcl9zZWxlY3Q=',openid.mode:'ape:Y2hlY2tpZF9zZXR1cA==',openid.assoc_handle:'ape:bG92ZWZpbG1fZGU=',openid.return_to:'ape:aHR0cHM6Ly93d3cubG92ZWZpbG0uZGUvYXV0aHBvcnRhbC9ib3VuY2VfYW1hem9uX2xvZ2luLmh0bWw=',ap_signin_existing_radio:'0'};jQuery.post(url,data,function(data){window.location.href=&quot;${url}&quot;});" />
                 <pause time="5000" />
                 <goto state="check-for-auth-again" />
             </action>
