@@ -1,4 +1,5 @@
-I've restored basic playback functionality for lovefilm.de **Not tested with lovefilm.com. I've probably broken lovefilm.com support**.
+I've restored basic playback functionality for lovefilm.de.
+**Not tested with lovefilm.com. I've probably broken lovefilm.com support**.
 
 ## Notes
 - **Autthentication** for lovefilm.de is handeled through Amazon.de now. You have to setup your Amazon.de login and change your lovefilm.de account to your Amazon account.
@@ -8,7 +9,7 @@ I've restored basic playback functionality for lovefilm.de **Not tested with lov
   - replacing /tv/ with /film/ fixes this, I have no clue why but it works
 
 ## TODO
-- Support for Movies with trailers
+- Support for movies with trailers
 - Slider
 - Volume
 - Number of episodes missing
