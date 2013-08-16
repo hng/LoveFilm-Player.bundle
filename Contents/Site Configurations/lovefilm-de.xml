@@ -88,14 +88,24 @@
             </condition>
             <action>
                 <lockPlugin />
+                <!-- click play -->
                 <pause time="2000" />
                 <click x="300" y="252" skipMouseUp="true" />
-                <pause time="1000" />
+                <pause time="500" />
                 <click x="300" y="252" />
+                <!-- click continue -->
+                <pause time="500" />
+                <click x="200" y="200" skipMouseUp="true" />
+                <pause time="500" />
+                <click x="200" y="200" />
+                <!-- click fullscreen -->
                 <pause time="1000" />
-                <click x="100" y="180" skipMouseUp="true" />
-                <pause time="1000" />
-                <click x="100" y="180" />
+                <click x="604" y="337" skipMouseUp="true" />
+                <pause time="500" />
+                <click x="604" y="337" />
+                <!-- get focus back -->
+                <pause time="5000" />
+                <click x="300" y="252" />
                 <goto state="playing" />
             </action>
         </event>
@@ -111,9 +121,9 @@
                 <!-- We send a click to somewhere on the player in order to make -->
                 <!-- the player's controls visible. Once this is done, we can then -->
                 <!-- send the actual click to the pause/play button -->
-                <click x="25" y="285" skipMouseUp="true" />
+                <click x="15" y="335" skipMouseUp="true" />
                 <pause time="500" />
-                <click x="25" y="285" />
+                <click x="15" y="335" />
                 <goto state="paused" />
             </action>
         </event>
@@ -129,9 +139,9 @@
                 <!-- We send a click to somewhere on the player in order to make -->
                 <!-- the player's controls visible. Once this is done, we can then -->
                 <!-- send the actual click to the pause/play button -->
-                <click x="25" y="285" skipMouseUp="true" />
+                <click x="15" y="335" skipMouseUp="true" />
                 <pause time="500" />
-                <click x="25" y="285" />
+                <click x="15" y="335" />
 				<goto state="playing" />
 			</action>
 		</event>
