@@ -223,7 +223,7 @@ def BrowseSeason(title, season_url):
             episode_name = full_title
             
         oc.add(EpisodeObject(
-            url = url,
+            url = url.replace("/tv/", "/film/"),
             title = episode_name,
             show = show,
             season = season_index,
