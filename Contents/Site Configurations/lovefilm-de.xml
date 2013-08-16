@@ -12,7 +12,7 @@
         <and>
             <!-- Check if a specific element exists in the page -->
             <!-- Returns true if we need to login -->
-            <javascript script="document.cookie.indexOf('cache_key=0/lovefilm')" matches="-1" />
+            <javascript script="$('span.welcome-message').length" matches="0" />
         </and>
     </condition>
 
